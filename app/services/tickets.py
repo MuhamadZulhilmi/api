@@ -1,16 +1,10 @@
 from sqlalchemy.orm import Session
-from app.models.models import Ticket, TicketCategory
+from app.models.models import Ticket
 from app.schemas.tickets import TicketCreate, TicketUpdate
 from app.utils.responses import ResponseHandler
 
 
 class TicketService:
-    @staticmethod
-    def get_all_tickets(db: Session, page: int, limit: int, search: str = ""):
-        tickets = db.query(Ticket).order_by(Ticket.id.asc()).filter(
-            Ticket.title.contains(search)).limit(limit).offset((page - 1) * limit).all()
-        return {"message": f"Page {page} with {limit} tickets", "data": tickets}
-
     @staticmethod
     def get_ticket(db: Session, ticket_id: int):
         ticket = db.query(Ticket).filter(Ticket.id == ticket_id).first()
@@ -19,13 +13,16 @@ class TicketService:
         return ResponseHandler.get_single_success(ticket.title, ticket_id, ticket)
 
     @staticmethod
-    def create_ticket(db: Session, ticket: TicketCreate):
-        category_exists = db.query(TicketCategory).filter(TicketCategory.id == ticket.ticket_category_id).first()
-        if not category_exists:
-            ResponseHandler.not_found_error("TicketCategory", ticket.ticket_category_id)
+    def get_all_tickets(db: Session, page: int = 1, limit: int = 10, search: str = ""):
+        query = db.query(Ticket)
+        if search:
+            query = query.filter(Ticket.title.ilike(f"%{search}%"))
+        tickets = query.order_by(Ticket.id.asc()).limit(limit).offset((page - 1) * limit).all()
+        return {"message": f"Page {page} with {limit} tickets", "data": tickets}
 
-        ticket_dict = ticket.model_dump()
-        db_ticket = Ticket(**ticket_dict)
+    @staticmethod
+    def create_ticket(db: Session, ticket: TicketCreate):
+        db_ticket = Ticket(**ticket.model_dump())
         db.add(db_ticket)
         db.commit()
         db.refresh(db_ticket)

@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional, ClassVar
-from app.schemas.ticket_categories import TicketCategoryBase
 
 
 # Base Models
@@ -13,18 +12,24 @@ class TicketBase(BaseModel):
     id: int
     title: str
     description: Optional[str]
-    created_at: datetime
-    ticket_category_id: int
-    ticket_category: TicketCategoryBase
+    status: str
+    customer: Optional[str]
+    agent: Optional[str]
+    created_date: datetime
+    agent_notes: Optional[str]
 
     class Config(BaseConfig):
         pass
 
 
 # Create Ticket
-class TicketCreate(TicketBase):
-    id: ClassVar[int]
-    ticket_category: ClassVar[TicketCategoryBase]
+class TicketCreate(BaseModel):
+    title: str
+    description: Optional[str]
+    status: str
+    customer: Optional[str]
+    agent: Optional[str]
+    agent_notes: Optional[str]
 
     class Config(BaseConfig):
         pass
@@ -53,8 +58,18 @@ class TicketsOut(BaseModel):
 
 
 # Delete Ticket
-class TicketDelete(TicketBase):
-    ticket_category: ClassVar[TicketCategoryBase]
+class TicketDelete(BaseModel):
+    id: int
+    title: str
+    description: Optional[str]
+    status: str
+    customer: Optional[str]
+    agent: Optional[str]
+    created_date: datetime
+    agent_notes: Optional[str]
+
+    class Config(BaseConfig):
+        pass
 
 
 class TicketOutDelete(BaseModel):

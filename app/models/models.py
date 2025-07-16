@@ -17,10 +17,10 @@ class User(Base):
     created_at = Column(TIMESTAMP(timezone=True), server_default=text("NOW()"), nullable=False)
 
     # New column for role
-    role = Column(Enum("admin", "user", name="user_roles"), nullable=False, server_default="user")
+    role = Column(Enum("admin", "user", "analyst", "cloudflare", "hod", "firewall", name="user_roles"), nullable=False, server_default="user")
 
-    # Relationship with carts
-    carts = relationship("Cart", back_populates="user")
+    # Relationship with ticket orders
+    ticket_orders = relationship("TicketOrder", back_populates="user")
 
 
 class TicketOrder(Base):
@@ -47,7 +47,8 @@ class TicketOrderItem(Base):
 
     # Relationship with ticket order and ticket
     ticket_order = relationship("TicketOrder", back_populates="ticket_order_items")
-    ticket = relationship("Ticket", back_populates="ticket_order_items")
+    # Removed ticket relationship to Ticket model to fix mapper error
+    # ticket = relationship("Ticket", back_populates="ticket_order_items")
 
 
 class TicketCategory(Base):
@@ -56,21 +57,21 @@ class TicketCategory(Base):
     id = Column(Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
     name = Column(String, unique=True, nullable=False)
 
-    # Relationship with tickets
-    tickets = relationship("Ticket", back_populates="ticket_category")
+    # Removed relationship with tickets due to missing foreign key in Ticket model
+    # tickets = relationship("Ticket", back_populates="ticket_category")
 
+
+from sqlalchemy import func, DateTime
 
 class Ticket(Base):
     __tablename__ = "tickets"
 
     id = Column(Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
-    title = Column(String, nullable=False)
-    description = Column(String, nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True), server_default=text("NOW()"), nullable=False)
-
-    # Relationship with ticket category
-    ticket_category_id = Column(Integer, ForeignKey("ticket_categories.id", ondelete="CASCADE"), nullable=False)
-    ticket_category = relationship("TicketCategory", back_populates="tickets")
-
-    # Relationship with ticket order items
-    ticket_order_items = relationship("TicketOrderItem", back_populates="ticket")
+    title = Column(String(150))
+    description = Column(String(250))
+    status = Column(String(100))
+    customer = Column(String(200))
+    agent_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    agent = relationship("User")
+    created_date = Column(DateTime, default=func.now(), nullable=False)
+    agent_notes = Column(String(1000))

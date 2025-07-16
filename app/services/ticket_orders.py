@@ -46,9 +46,9 @@ class TicketOrderService:
             # total_amount field removed as per request
             # total_amount += subtotal
 
-        ticket_order_items.append(ticket_order_item)
-    ticket_order_db = TicketOrder(ticket_order_items=ticket_order_items, user_id=user_id, **ticket_order_dict)
-    db.add(ticket_order_db)
+            ticket_order_items.append(ticket_order_item)
+        ticket_order_db = TicketOrder(ticket_order_items=ticket_order_items, user_id=user_id, **ticket_order_dict)
+        db.add(ticket_order_db)
         db.commit()
         db.refresh(ticket_order_db)
         return ResponseHandler.create_success("TicketOrder", ticket_order_db.id, ticket_order_db)

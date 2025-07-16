@@ -28,7 +28,8 @@ class AuthService:
     async def signup(db: Session, user: Signup):
         hashed_password = get_password_hash(user.password)
         user.password = hashed_password
-        db_user = User(id=None, **user.model_dump())
+        role = getattr(user, "role", "user")
+        db_user = User(id=None, role=role, **user.model_dump(exclude={"role"}))
         db.add(db_user)
         db.commit()
         db.refresh(db_user)

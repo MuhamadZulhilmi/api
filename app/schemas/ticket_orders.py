@@ -1,7 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import List
 from datetime import datetime
-from app.schemas.tickets import TicketBase, TicketCategoryBase
+from app.schemas.tickets import TicketBase
+from app.schemas.ticket_categories import TicketCategoryBase
 
 
 # Base Config

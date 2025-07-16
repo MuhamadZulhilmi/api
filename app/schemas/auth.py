@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 # Base
 class BaseConfig:
     from_attributes = True
@@ -25,6 +25,7 @@ class Signup(BaseModel):
     username: str
     email: str
     password: str
+    role: Optional[str] = "user"
 
     class Config(BaseConfig):
         pass

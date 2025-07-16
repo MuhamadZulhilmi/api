@@ -1,6 +1,6 @@
-from app.routers import tickets, ticket_categories, ticket_orders, users, auth, accounts
+from app.routers import tickets, ticket_categories, ticket_orders, users, auth, accounts, database
 from fastapi import FastAPI
-
+from fastapi.middleware.cors import CORSMiddleware
 
 description = """
 Welcome to the Ticketing API! 🚀
@@ -24,13 +24,24 @@ Key features include:
 
 """
 
-
 app = FastAPI(
     description=description,
     title="Ticketing API",
     version="1.0.0",
 )
 
+# Configure CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://192.168.0.20:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+def root():
+    return {"message": "Welcome to the Ticketing API!"}
 
 app.include_router(tickets.router)
 app.include_router(ticket_categories.router)
@@ -38,3 +49,4 @@ app.include_router(ticket_orders.router)
 app.include_router(users.router)
 app.include_router(accounts.router)
 app.include_router(auth.router)
+app.include_router(database.router)
