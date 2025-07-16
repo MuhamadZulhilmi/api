@@ -1,9 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import List
-from app.schemas.carts import CartBase
-
-
 class AccountBase(BaseModel):
     id: int
     username: str
@@ -12,7 +9,6 @@ class AccountBase(BaseModel):
     role: str
     is_active: bool
     created_at: datetime
-    carts: List[CartBase]
 
     class Config:
         from_attributes = True
