@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, status, Header, Request
 from sqlalchemy.orm import Session
 from app.services.auth import AuthService
-from app.services.ms_auth import MSAuthService
+from app.services.otp_auth import OTPAuthService
 from app.db.database import get_db
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from app.schemas.auth import UserOut, Signup
+from app.schemas.auth import Signup, UserOut
+from app.schemas.otp import UserBaseSchema, LoginUserSchema, UserRequestSchema
 
 
 router = APIRouter(tags=["Auth"], prefix="/auth")
@@ -24,11 +25,46 @@ async def user_login(
     return await AuthService.login(user_credentials, db)
 
 
-@router.post("/microsoft-login", status_code=status.HTTP_200_OK)
-async def microsoft_login(
-        request: Request,
+@router.post("/register-otp", status_code=status.HTTP_201_CREATED)
+async def register_user(
+        user: UserBaseSchema,
         db: Session = Depends(get_db)):
-    return await MSAuthService.microsoft_login(request, db)
+    return await OTPAuthService.register_user(db, user)
+
+
+@router.post("/login-otp", status_code=status.HTTP_200_OK)
+async def login_user(
+        payload: LoginUserSchema,
+        db: Session = Depends(get_db)):
+    return await OTPAuthService.login_user(db, payload)
+
+
+@router.post("/otp/generate", status_code=status.HTTP_200_OK)
+async def generate_otp(
+        payload: UserRequestSchema,
+        db: Session = Depends(get_db)):
+    return await OTPAuthService.generate_otp(db, payload.user_id)
+
+
+@router.post("/otp/verify", status_code=status.HTTP_200_OK)
+async def verify_otp(
+        payload: UserRequestSchema,
+        db: Session = Depends(get_db)):
+    return await OTPAuthService.verify_otp(db, payload.user_id, payload.token)
+
+
+@router.post("/otp/validate", status_code=status.HTTP_200_OK)
+async def validate_otp(
+        payload: UserRequestSchema,
+        db: Session = Depends(get_db)):
+    return await OTPAuthService.validate_otp(db, payload.user_id, payload.token)
+
+
+@router.post("/otp/disable", status_code=status.HTTP_200_OK)
+async def disable_otp(
+        payload: UserRequestSchema,
+        db: Session = Depends(get_db)):
+    return await OTPAuthService.disable_otp(db, payload.user_id)
 
 
 @router.post("/refresh", status_code=status.HTTP_200_OK)

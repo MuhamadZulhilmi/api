@@ -18,6 +18,12 @@ class User(Base):
 
     # New column for role
     role = Column(Enum("admin", "user", "analyst", "cloudflare", "hod", "firewall", name="user_roles"), nullable=False, server_default="user")
+    
+    # OTP fields
+    otp_enabled = Column(Boolean, server_default="False", nullable=False)
+    otp_verified = Column(Boolean, server_default="False", nullable=False)
+    otp_base32 = Column(String(32), nullable=True)
+    otp_auth_url = Column(String(500), nullable=True)
 
     # Relationship with ticket orders
     ticket_orders = relationship("TicketOrder", back_populates="user")
