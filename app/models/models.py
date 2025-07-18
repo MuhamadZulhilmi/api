@@ -1,9 +1,9 @@
-from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Float, ARRAY, Enum
+from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Float, ARRAY, Enum, Text
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.orm import relationship
 from app.db.database import Base
-
+from sqlalchemy import func, DateTime
 
 class User(Base):
     __tablename__ = "users"
@@ -15,8 +15,10 @@ class User(Base):
     full_name = Column(String, nullable=False)
     is_active = Column(Boolean, server_default="True", nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), server_default=text("NOW()"), nullable=False)
+    updated_at = Column(TIMESTAMP(timezone=True), server_default=text("NOW()"), onupdate=func.now(), nullable=False)
 
     # New column for role
+<<<<<<< HEAD
     role = Column(Enum("admin", "user", "analyst", "cloudflare", "hod", "firewall", name="user_roles"), nullable=False, server_default="user")
     
     # OTP fields
@@ -25,6 +27,17 @@ class User(Base):
     otp_base32 = Column(String(32), nullable=True)
     otp_auth_url = Column(String(500), nullable=True)
 
+=======
+    # role = Column(Enum("admin", "user", name="user_roles"), nullable=False, server_default="user")
+    role = Column(Enum("admin", "user", "analyst", "cloudflare", "hod", "firewall", name="user_roles"), nullable=False, server_default="user")    
+
+    # OTP fields
+    otp_enabled = Column(Boolean, server_default="False", nullable=False)
+    otp_verified = Column(Boolean, server_default="False", nullable=False)
+    otp_base32 = Column(String(32), nullable=True)
+    otp_auth_url = Column(String(500), nullable=True)
+
+>>>>>>> b600bb7 (fifth commit)
     # Relationship with ticket orders
     ticket_orders = relationship("TicketOrder", back_populates="user")
 
@@ -55,7 +68,10 @@ class TicketOrderItem(Base):
     ticket_order = relationship("TicketOrder", back_populates="ticket_order_items")
     # Removed ticket relationship to Ticket model to fix mapper error
     # ticket = relationship("Ticket", back_populates="ticket_order_items")
+<<<<<<< HEAD
 
+=======
+>>>>>>> b600bb7 (fifth commit)
 
 class TicketCategory(Base):
     __tablename__ = "ticket_categories"
@@ -65,7 +81,10 @@ class TicketCategory(Base):
 
     # Removed relationship with tickets due to missing foreign key in Ticket model
     # tickets = relationship("Ticket", back_populates="ticket_category")
+<<<<<<< HEAD
 
+=======
+>>>>>>> b600bb7 (fifth commit)
 
 from sqlalchemy import func, DateTime
 
@@ -77,7 +96,11 @@ class Ticket(Base):
     description = Column(String(250))
     status = Column(String(100))
     customer = Column(String(200))
+<<<<<<< HEAD
     agent_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     agent = relationship("User")
+=======
+    agent = Column(String(200))
+>>>>>>> b600bb7 (fifth commit)
     created_date = Column(DateTime, default=func.now(), nullable=False)
     agent_notes = Column(String(1000))

@@ -5,7 +5,7 @@ from typing import Generator
 from app.core.config import settings
 
 
-DATABASE_URL = "mysql+pymysql://root:root123@localhost:3306/tactic"
+DATABASE_URL = "mysql+pymysql://tactic:TacticUser123@192.168.0.101:3306/tactic"
 
 # Establish a connection to the PostgreSQL database
 engine = create_engine(DATABASE_URL)

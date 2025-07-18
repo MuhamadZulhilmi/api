@@ -5,12 +5,22 @@ from fastapi import HTTPException, status
 from app.models.models import User
 from app.db.database import get_db
 from app.core.security import get_password_hash, verify_password
+<<<<<<< HEAD
 from app.schemas.auth import Signup
 from app.schemas.otp import UserBaseSchema, LoginUserSchema, UserRequestSchema
 
 
 class OTPAuthService:
     @staticmethod
+=======
+#from app.schemas.auth import Signup, LoginUserSchema, OTPRequestSchema
+from app.schemas.auth import Signup
+from app.schemas.otp import UserBaseSchema, LoginUserSchema, UserRequestSchema
+
+class OTPAuthService:
+    @staticmethod
+    #async def register_user(db: Session, user: Signup):
+>>>>>>> b600bb7 (fifth commit)
     async def register_user(db: Session, user: UserBaseSchema):
         # Check if user already exists
         existing_user = db.query(User).filter(

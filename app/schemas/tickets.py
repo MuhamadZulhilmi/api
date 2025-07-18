@@ -2,11 +2,8 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional, ClassVar
 
-
-# Base Models
 class BaseConfig:
     from_attributes = True
-
 
 class TicketBase(BaseModel):
     id: int
@@ -31,8 +28,8 @@ class TicketCreate(BaseModel):
     agent: Optional[str]
     agent_notes: Optional[str]
 
-    class Config(BaseConfig):
-        pass
+    class Config:
+        from_attributes = True 
 
 
 # Update Ticket
@@ -75,3 +72,4 @@ class TicketDelete(BaseModel):
 class TicketOutDelete(BaseModel):
     message: str
     data: TicketDelete
+

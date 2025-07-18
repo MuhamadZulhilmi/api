@@ -1,6 +1,12 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
+<<<<<<< HEAD
 from typing import List, Optional
+=======
+from typing import List
+from typing import Optional
+
+>>>>>>> b600bb7 (fifth commit)
 # Base
 class BaseConfig:
     from_attributes = True

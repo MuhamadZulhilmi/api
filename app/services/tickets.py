@@ -49,3 +49,4 @@ class TicketService:
         db.delete(db_ticket)
         db.commit()
         return ResponseHandler.delete_success(db_ticket.title, db_ticket.id, db_ticket)
+

@@ -92,3 +92,4 @@ class TicketOrderCreate(BaseModel):
 # Update TicketOrder
 class TicketOrderUpdate(TicketOrderCreate):
     pass
+

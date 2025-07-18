@@ -43,7 +43,7 @@ async def get_user_token(id: int, refresh_token=None):
         access_token=access_token,
         refresh_token=refresh_token,
         expires_in=access_token_expiry.seconds
-    )
+    ).dict()
 
 
 # Create Access Token
